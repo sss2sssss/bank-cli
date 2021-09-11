@@ -207,14 +207,14 @@ Else it will show table list wiith event detail and transaction time<br/>
 
 4) If there is have any transaction record: <br/>
 Example: <br/>
-Hello, Bob!
-Here's your last 7 transaction(s) performed.
-       Event Log                           Timestamp
-===========================================================
-Top up 90.00.                      2020-04-08T12:00:37.644Z
-Transferred 10.00 to Alice.        2020-04-08T12:00:37.612Z
-Owing 10.00 to Alice.              2020-04-08T12:00:14.787Z
-Transferred 30.00 to Alice.        2020-04-08T11:59:49.831Z
-Owing 70.00 to Alice.              2020-04-08T11:59:36.038Z
-Transferred 30.00 to Alice.        2020-04-08T11:59:35.980Z
-Top up 80.00.                      2020-04-08T11:59:25.385Z
+Hello, Bob!<br/>
+Here's your last 7 transaction(s) performed.<br/>
+       Event Log                           Timestamp<br/>
+===========================================================<br/>
+Top up 90.00.                      2020-04-08T12:00:37.644Z<br/>
+Transferred 10.00 to Alice.        2020-04-08T12:00:37.612Z<br/>
+Owing 10.00 to Alice.              2020-04-08T12:00:14.787Z<br/>
+Transferred 30.00 to Alice.        2020-04-08T11:59:49.831Z<br/>
+Owing 70.00 to Alice.              2020-04-08T11:59:36.038Z<br/>
+Transferred 30.00 to Alice.        2020-04-08T11:59:35.980Z<br/>
+Top up 80.00.                      2020-04-08T11:59:25.385Z<br/>
