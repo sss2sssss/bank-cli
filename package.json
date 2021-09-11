@@ -1,0 +1,19 @@
+{
+  "name": "bank_cli",
+  "version": "1.0.0",
+  "description": "bank cli demo",
+  "preferGlobal": true,
+  "bin": {
+    "bank": "./index.js"
+  },
+  "scripts": {
+    "first-initiate": "npm install && npm install -g ./"
+  },
+  "author": "linsiong.soh",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^4.0.1",
+    "commander": "^5.0.0",
+    "sqlite3": "^4.1.1"
+  }
+}
