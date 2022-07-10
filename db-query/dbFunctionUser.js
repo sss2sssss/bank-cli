@@ -6,13 +6,12 @@ const createTableString = 'CREATE TABLE IF NOT EXISTS user(id INTEGER PRIMARY KE
 
 function checkUsrSessionLogin()
 {
-    return new Promise(function(resolve, reject){
+    return new Promise(async function(resolve, reject){
         let sql = `SELECT id, name
         FROM user
         WHERE status  = 'Online'`;
-
-        dbQuery.createOrGetDbConnection()
-        .then((db) => {
+        try {
+            let db = await dbQuery.createOrGetDbConnection()
             db.serialize(() => {
                 db.run(createTableString)
                     .get(sql, (err, row) => {
@@ -40,22 +39,20 @@ function checkUsrSessionLogin()
                         }
                     });
               });
-        })
-        .catch((err) => {
+        } catch (err) {
             reject(err);
-        });
+        }
     });  
 }
 
 function checkUsrExists(name)
 {
-    return new Promise(function(resolve, reject){
+    return new Promise(async function(resolve, reject){
         let sql = `SELECT id
         FROM user
         WHERE name  = ?`;
-
-        dbQuery.createOrGetDbConnection()
-        .then((db) => {
+        try {
+            let db = await dbQuery.createOrGetDbConnection()
             db.serialize(() => {
                 db.run(createTableString)
                     .get(sql, [name], (err, row) => {
@@ -77,10 +74,9 @@ function checkUsrExists(name)
                         }
                     });
               });
-        })
-        .catch((err) => {
+        } catch (err) {
             reject(err);
-        });
+        }
     });
 }
 
@@ -91,15 +87,15 @@ function createUsrAndLogin(name, password)
         VALUES (?, ?, 'Online', '0.00')`;
 
         // password will be hashed here by bcrypt
-        bcrypt.hash(password, saltRounds, function(err, hash) {
+        bcrypt.hash(password, saltRounds, async function(err, hash) {
             if (err)
             {
                 reject(err.message);
             }
             else
             {
-                dbQuery.createOrGetDbConnection()
-                .then((db) => {
+                try {
+                    let db = await dbQuery.createOrGetDbConnection()
                     db.serialize(() => {
                         db.run(createTableString)
                             .run(sql, [name, hash], (err) => {
@@ -114,10 +110,9 @@ function createUsrAndLogin(name, password)
                                 }
                             });
                       });
-                })
-                .catch((err) => {
+                } catch (err) {
                     reject(err);
-                });
+                }
             }
         });
     });
@@ -125,15 +120,14 @@ function createUsrAndLogin(name, password)
 
 function forceLogoutAndLogin(name, password)
 {
-    return new Promise(function(resolve, reject)
+    return new Promise(async function(resolve, reject)
     {
         let updateSql = `UPDATE user SET status = 'Offline'`;
-
-        dbQuery.createOrGetDbConnection()
-        .then((db) => {
+        try {
+            let db = await dbQuery.createOrGetDbConnection()
             db.serialize(() => {
                 db.run(createTableString)
-                    .run(updateSql, (err) => {
+                    .run(updateSql, async (err) => {
                         if (err) {
                             db.close();
                             reject(err.message);
@@ -141,34 +135,31 @@ function forceLogoutAndLogin(name, password)
                         else
                         {
                             db.close();
-                            login(name, password)
-                            .then(() => {
+                            try {
+                                await login(name, password)
                                 resolve(true);
-                            })
-                            .catch((err) => {
+                            } catch (err) {
                                 reject(err);
-                            });
+                            }
                         }
                     });
               });
-        })
-        .catch((err) => {
+        } catch (err) {
             reject(err);
-        });
+        }
     });
 }
 
 function forceLogoutAndCreateUsr(name, password)
 {
-    return new Promise(function(resolve, reject)
+    return new Promise(async function(resolve, reject)
     {
         let updateSql = `UPDATE user SET status = 'Offline'`;
-
-        dbQuery.createOrGetDbConnection()
-        .then((db) => {
+        try {
+            let db = await dbQuery.createOrGetDbConnection()
             db.serialize(() => {
                 db.run(createTableString)
-                    .run(updateSql, (err) => {
+                    .run(updateSql, async (err) => {
                         if (err) {
                             db.close();
                             reject(err.message);
@@ -176,31 +167,28 @@ function forceLogoutAndCreateUsr(name, password)
                         else
                         {
                             db.close();
-                            createUsrAndLogin(name, password)
-                            .then(() => {
+                            try {
+                                await createUsrAndLogin(name, password)
                                 resolve(true);
-                            })
-                            .catch((err) => {
+                            } catch (err) {
                                 reject(err);
-                            });
+                            }
                         }
                     });
               });
-        })
-        .catch((err) => {
+        } catch (err) {
             reject(err);
-        });
+        }
     });
 }
 
 function login(name, password)
 {
-    return new Promise(function(resolve, reject){
+    return new Promise(async function(resolve, reject){
         let getSql = `SELECT passwordHashed FROM user WHERE name  = ?`;
         let updateSql = `UPDATE user SET status = 'Online' where name = ?`;
-
-        dbQuery.createOrGetDbConnection()
-        .then((db) => {
+        try {
+            let db = await dbQuery.createOrGetDbConnection()
             db.serialize(() => {
                 db.run(createTableString)
                     .get(getSql, [name], (err, row) => {
@@ -251,20 +239,18 @@ function login(name, password)
                         }
                     });
               });
-        })
-        .catch((err) => {
+        } catch (err) {
             reject(err);
-        });
+        }
     });    
 }
 
 function logout()
 {
-    return new Promise(function(resolve, reject){
+    return new Promise(async function(resolve, reject){
         let updateSql = `UPDATE user SET status = 'Offline'`;
-
-        dbQuery.createOrGetDbConnection()
-        .then((db) => {
+        try {
+            let db = await dbQuery.createOrGetDbConnection()
             db.serialize(() => {
                 db.run(createTableString)
                     .run(updateSql, (err) => {
@@ -279,20 +265,18 @@ function logout()
                     }
                 });
               });
-        })
-        .catch((err) => {
+        } catch (err) {
             reject(err);
-        });
+        }
     });    
 }
 
 function getUsrAvailableAmount(id)
 {
-    return new Promise(function(resolve, reject){
+    return new Promise(async function(resolve, reject){
         let getSql = `SELECT totalAmountAvailable FROM user WHERE id  = ?`;
-
-        dbQuery.createOrGetDbConnection()
-        .then((db) => {
+        try {
+            let db = await dbQuery.createOrGetDbConnection()
             db.serialize(() => {
                 db.run(createTableString)
                     .get(getSql, [id], (err, row) => {
@@ -315,20 +299,19 @@ function getUsrAvailableAmount(id)
                         }
                     });
               });
-        })
-        .catch((err) => {
+        } catch (err) {
             reject(err);
-        });
+        }
     });  
 }
 
 function setUsrAvailableAmount(id, amount)
 {
-    return new Promise(function(resolve, reject){
+    return new Promise(async function(resolve, reject){
         let updateSql = `UPDATE user SET totalAmountAvailable = ? where id = ?`;
 
-        dbQuery.createOrGetDbConnection()
-        .then((db) => {
+        try {
+            let db = await dbQuery.createOrGetDbConnection()
             db.serialize(() => {
                 db.run(createTableString)
                     .run(updateSql, [amount, id], (err) => {
@@ -343,22 +326,21 @@ function setUsrAvailableAmount(id, amount)
                         }
                     });
               });
-        })
-        .catch((err) => {
+        } catch (err) {
             reject(err);
-        });
+        }
     });  
 }
 
 function getUsrId(name)
 {
-    return new Promise(function(resolve, reject){
+    return new Promise(async function(resolve, reject){
         let sql = `SELECT id
         FROM user
         WHERE name  = ?`;
 
-        dbQuery.createOrGetDbConnection()
-        .then((db) => {
+        try {
+            let db = await dbQuery.createOrGetDbConnection()
             db.serialize(() => {
                 db.run(createTableString)
                     .get(sql, [name], (err, row) => {
@@ -380,22 +362,21 @@ function getUsrId(name)
                         }
                     });
               });
-        })
-        .catch((err) => {
+        } catch (err) {
             reject(err);
-        });
+        }
     });
 }
 
 function getUsrName(id)
 {
-    return new Promise(function(resolve, reject){
+    return new Promise(async function(resolve, reject){
         let sql = `SELECT name
         FROM user
         WHERE id  = ?`;
 
-        dbQuery.createOrGetDbConnection()
-        .then((db) => {
+        try {
+            let db = await dbQuery.createOrGetDbConnection()
             db.serialize(() => {
                 db.run(createTableString)
                     .get(sql, [id], (err, row) => {
@@ -417,10 +398,9 @@ function getUsrName(id)
                         }
                     });
               });
-        })
-        .catch((err) => {
+        } catch (err) {
             reject(err);
-        });
+        }
     });
 }
 
