@@ -1,5 +1,5 @@
 {
-  "name": "bank_cli",
+  "name": "@sss2sssss/bank_cli",
   "version": "1.0.0",
   "description": "bank cli demo",
   "preferGlobal": true,
@@ -13,7 +13,9 @@
   "license": "MIT",
   "dependencies": {
     "bcrypt": "^5.0.1",
-    "commander": "^5.0.0",
-    "sqlite3": "^4.2.0"
+    "commander": "^5.0.0"
+  },
+  "devDependencies": {
+    "sqlite3": "^5.0.8"
   }
 }
