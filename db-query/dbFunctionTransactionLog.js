@@ -5,12 +5,12 @@ const createTableString = 'CREATE TABLE IF NOT EXISTS transactionLog(id INTEGER 
 
 function insertLog(performUserId, event)
 {
-    return new Promise(function(resolve, reject){
+    return new Promise(async function(resolve, reject){
         let sql = `INSERT INTO transactionLog (performUserId, event, transactionTimestamp)
         VALUES (?, ?, ?)`;
 
-        dbQuery.createOrGetDbConnection()
-        .then((db) => {
+        try {
+            let db = await dbQuery.createOrGetDbConnection()
             db.serialize(() => {
                 db.run(createTableString)
                     .run(sql, [performUserId, event, timeUtil.getCurrentTime()], (err) => {
@@ -25,22 +25,21 @@ function insertLog(performUserId, event)
                         }
                     });
               });
-        })
-        .catch((err) => {
+        } catch (err) {
             reject(err);
-        });
+        }
     });
 }
 
 function getLatestHistoryTransactions(userId, limit)
 {
-    return new Promise(function(resolve, reject){
+    return new Promise(async function(resolve, reject){
         let sql = `SELECT event, transactionTimestamp
         FROM transactionLog
         WHERE performUserId  = ? ORDER BY id DESC LIMIT ?`;
 
-        dbQuery.createOrGetDbConnection()
-        .then((db) => {
+        try {
+            let db = await dbQuery.createOrGetDbConnection()
             db.serialize(() => {
                 db.run(createTableString)
                     .all(sql, [userId, limit], (err, row) => {
@@ -55,10 +54,9 @@ function getLatestHistoryTransactions(userId, limit)
                         }
                     });
               });
-        })
-        .catch((err) => {
+        } catch (err) {
             reject(err);
-        });
+        }
     });
 }
 
